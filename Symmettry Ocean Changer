@@ -1,0 +1,72 @@
+// ==UserScript==
+// @name         Symmettry Ocean Changer
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  Changes the color of the ocean in PixelPlace.io
+// @author       You
+// @match        https://pixelplace.io/*
+// @icon         https://pixelplace.io/canvas/70430.png?t=1701574701
+// @grant        none
+// ==/UserScript==
+
+const red = 200;
+const green = 200;
+const blue = 255;
+
+const alpha = 255; // transparency; you should probably keep it at 255
+
+
+
+
+// change ocean pixel colors
+function changePixels() {
+
+    const canvas = document.getElementById("canvas"); // get canvas
+    const ctx = canvas.getContext("2d"); // get draw tool
+
+    // get the canvas pixel data
+    let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height); // image data
+    let data = imageData.data; // data
+
+    // go through each pixel (4 values per pixel - red, green, blue, alpha)
+    for (let i = 0; i < data.length; i += 4) {
+        if (data[i] === 204 && data[i + 1] === 204 && data[i + 2] === 204) { // check for ocean (204,204,204)
+            // assign new colors
+            data[i] = red;
+            data[i + 1] = green;
+            data[i + 2] = blue;
+            data[i + 3] = alpha;
+        }
+    }
+
+    // put the modified pixel data back onto the canvas
+    ctx.putImageData(imageData, 0, 0);
+}
+
+function findCanvas() {
+    if(document.getElementById("canvas") == null) { // this will keep going until it finds the canvas
+        setTimeout(findCanvas, 100);
+    } else {
+        changePixels(); // once it's loaded, change the pixels
+    }
+}
+
+findCanvas();
+
+// just the css code lmao
+const css = `#painting {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    left: 0;
+    cursor: move;
+    background-color: rgb(${red}, ${green}, ${blue}, ${alpha});
+    overflow: hidden
+}`;
+
+let styleElement = document.createElement('style');      // create stylesheet
+styleElement.type = 'text/css';                          // assign stylesheet type
+styleElement.appendChild(document.createTextNode(css));  // add the css to it
+document.head.appendChild(styleElement);                 // add the css to pixelplace
