@@ -1,0 +1,28 @@
+// ==UserScript==
+// @name         PP Forum Background Changer
+// @version      1.0
+// @description  Change forum background lol
+// @author       Azti
+// @match        https://pixelplace.io/forums/
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=pixelplace.io
+// @grant        GM.addStyle
+// @run-at       document-start
+// ==/UserScript==
+
+//false = image, true = random.
+var random = true
+// Put your image link here, full link with .png at the end.
+var Image = 'https://modworkshop.net/mydownloads/previews/88012_1610031564_71509adf7f774c8ab9250e5e72f0c2ee.png'
+
+
+//rest of the code you don't mind
+if (random === true) {
+var Load = 'https://pixelplace.io/img/item-' + (Math.floor(Math.random() * 5) + 1) + '.png'
+}
+else {
+Load = Image
+}
+
+GM.addStyle("body{ background-image:var(--image1); background-size: auto; background-repeat: repeat }");
+var body = document.querySelector('body')
+body.style.setProperty('--image1', 'url(' + Load + ')')
