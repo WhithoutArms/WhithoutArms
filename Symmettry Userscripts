@@ -1,0 +1,38 @@
+---------------------------------------------------------------------------------
+PixelPlace - Symmettry
+Discord - sporemint
+---------------------------------------------------------------------------------
+// ==UserScript==
+// @name         PixelPlace Dark Chat
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  try to take over the world!
+// @author       You
+// @match        https://pixelplace.io/*
+// @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
+// @grant        none
+// @run-at       document-start
+// ==/UserScript==
+document.head.appendChild(Object.assign(document.createElement('style'), { innerHTML: `#chat {background-color: rgba(0,0,0,.85);border: 1px solid rgba(0,0,0,.15);border-top: none}#chat .tabs>a.selected {background-color: rgba(0,0,0,.85);border: 1px solid rgba(0,0,0,.15);border-bottom: none}` }));
+document.addEventListener('DOMContentLoaded', () => document.body.addEventListener('DOMNodeInserted', () => {
+    if(!event.target.classList || event.target.classList.length != 1 || event.target.classList[0] != "row")return;
+    event.target.childNodes.forEach(ele => {
+        if(!ele.classList || ele.classList[0] != "user" || ele.style.cssText != "color: rgb(0, 0, 0);") return;
+        ele.style.cssText += "; text-shadow: -0.75px -0.75px 0 #fff, 0.75px -0.75px 0 #fff, -0.75px 0.75px 0 #fff, 0.75px 0.75px 0 #fff;";
+    });
+}))
+---------------------------------------------------------------------------------
+// ==UserScript==
+// @name         PXP Adblock
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  Removes advertisements from pixelplace
+// @author       Symmettry
+// @match        https://pixelplace.io/*
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=pixelplace.io
+// @grant        none
+// @run-at       document-end
+// ==/UserScript==
+document.head.appendChild(Object.assign(document.createElement('style'), { innerHTML: '.ablock { display: none; }' }));
+---------------------------------------------------------------------------------
+
