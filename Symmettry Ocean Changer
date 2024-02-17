@@ -1,72 +1,33 @@
 // ==UserScript==
-// @name         Symmettry Ocean Changer
+// @name         PixelPlace Ocean Changer
 // @namespace    http://tampermonkey.net/
 // @version      0.1
-// @description  Changes the color of the ocean in PixelPlace.io
-// @author       You
+// @description  overrides the color of the ocean on pixelplace
+// @author       Symmettry
 // @match        https://pixelplace.io/*
-// @icon         https://pixelplace.io/canvas/70430.png?t=1701574701
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=pixelplace.io
 // @grant        none
 // ==/UserScript==
 
-const red = 200;
-const green = 200;
-const blue = 255;
+const red = 50;
+const green = 50;
+const blue = 50;
 
-const alpha = 255; // transparency; you should probably keep it at 255
+const image = "https://media4.giphy.com/media/3oKIPaGG4PDQgQDFZe/giphy.gif"; // Put image URL here to change the background, or just "" for the rgb to apply -- currently just an ocean gif lmao
+const style = "cover"; // contain: makes the image fit in the canvas, cover: fully covers the canvas
 
 
-
-
-// change ocean pixel colors
-function changePixels() {
-
-    const canvas = document.getElementById("canvas"); // get canvas
-    const ctx = canvas.getContext("2d"); // get draw tool
-
-    // get the canvas pixel data
-    let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height); // image data
-    let data = imageData.data; // data
-
-    // go through each pixel (4 values per pixel - red, green, blue, alpha)
-    for (let i = 0; i < data.length; i += 4) {
-        if (data[i] === 204 && data[i + 1] === 204 && data[i + 2] === 204) { // check for ocean (204,204,204)
-            // assign new colors
-            data[i] = red;
-            data[i + 1] = green;
-            data[i + 2] = blue;
-            data[i + 3] = alpha;
-        }
-    }
-
-    // put the modified pixel data back onto the canvas
-    ctx.putImageData(imageData, 0, 0);
+function j() {
+    const e = document.getElementById("canvas"),
+        t = e.getContext("2d"),
+        n = t.getImageData(0, 0, e.width, e.height),
+        a = n.data;
+    for (let l = 0; l < a.length; l += 4) 204 === a[l] && 204 === a[l + 1] && 204 === a[l + 2] && (a[l + 3] = 0);
+    t.putImageData(n, 0, 0)
 }
 
-function findCanvas() {
-    if(document.getElementById("canvas") == null) { // this will keep going until it finds the canvas
-        setTimeout(findCanvas, 100);
-    } else {
-        changePixels(); // once it's loaded, change the pixels
-    }
+function r() {
+    document.getElementById("canvas") == null ? setTimeout(r, 100) : j();
 }
-
-findCanvas();
-
-// just the css code lmao
-const css = `#painting {
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    top: 0;
-    left: 0;
-    cursor: move;
-    background-color: rgb(${red}, ${green}, ${blue}, ${alpha});
-    overflow: hidden
-}`;
-
-let styleElement = document.createElement('style');      // create stylesheet
-styleElement.type = 'text/css';                          // assign stylesheet type
-styleElement.appendChild(document.createTextNode(css));  // add the css to it
-document.head.appendChild(styleElement);                 // add the css to pixelplace
+r();
+document.head.appendChild(Object.assign(document.createElement('style'), { innerHTML: `#painting {position: absolute;display: flex;align-items: center;justify-content: center;top: 0;left: 0;cursor: move;background-color: rgb(${red}, ${green}, ${blue});${""!=image?`background-image: url('${image}');background-size: ${style};background-position: center;background-repeat: no-repeat;margin: 0;height: 100vh`:""};overflow: hidden}` }));
